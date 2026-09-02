@@ -1,24 +1,28 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('app');
-});
+// Página inicial temporária: redireciona para o login
+Route::redirect('/', '/login');
 
-//rotas para logar no sistema
+// Rotas de autenticação
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login'); // o nome da rota internamente fica login
 Route::post('/login', [AuthController::class, 'login']);
 
-//rotas para criar um usuario
+// Rotas de criação de usuário
 Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
 
-//rota de logout
+// Logout
 Route::post('/logout', [AuthController::class, 'logout']);
 
-//rota do dashboard
+// Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth');
+
+// Área administrativa
+Route::get('/admin', [AdminController::class, 'index'])
+    ->middleware(['auth', 'can:access-admin']);
