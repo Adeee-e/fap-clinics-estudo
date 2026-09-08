@@ -1,28 +1,27 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-// Página inicial temporária: redireciona para o login
-Route::redirect('/', '/login');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
 
-// Rotas de autenticação
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login'); // o nome da rota internamente fica login
-Route::post('/login', [AuthController::class, 'login']);
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rotas de criação de usuário
-Route::get('/register', [AuthController::class, 'showRegister']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-// Logout
-Route::post('/logout', [AuthController::class, 'logout']);
-
-// Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware('auth');
-
-// Área administrativa
-Route::get('/admin', [AdminController::class, 'index'])
-    ->middleware(['auth', 'can:access-admin']);
+require __DIR__.'/auth.php';
