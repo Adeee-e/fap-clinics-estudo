@@ -14,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
+//NÃO UTILIZAREMOS ESTE CONTROLLER PADRÃO DO BREEZE, POIS A CRIAÇÃO DE USUARIOS SERA FEITA POR UM ADMIN. CRIAREMOS UMA NOVA CONTROLLER PARA ISSO.
+
 class RegisteredUserController extends Controller
 {
     /**
