@@ -47,7 +47,7 @@ class UserController extends Controller
                 ->route('users.index')
                 ->with('success', 'Usuário cadastrado com sucesso.');
 
-        } catch (PDO Exception $e) {
+        } catch (PDOException $e) {
             
             Log::error('[UserController][store] Erro ao cadastrar usuário', [
                 'exception' => $e,
